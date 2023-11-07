@@ -6,31 +6,43 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct TaskView: View {
-    let todo: TODO
+
+    @Bindable var item: Item
     
-    
+    // How a task will look like
     var body: some View {
-        HStack{
-            Toggle(isOn: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Is On@*/.constant(true)/*@END_MENU_TOKEN@*/) {
-                VStack {
-                    Text("[Taskname]");
-                    Text("[Description]");
-                    Text("[Date]");
+        HStack {
+            
+            // Ternary operator for different image depending on task completion
+            Image(systemName: item.isCompleted ? "checkmark.square" : "square")
+                .onTapGesture {
+                    item.isCompleted = !item.isCompleted
                 }
+            VStack (alignment: .leading) {
+                Text(item.title).foregroundStyle(.primary)
+                Text(item.desc).foregroundStyle(.gray)
             }
+            Spacer()
         }
-        Divider()
-         .frame(height: 1)
-         .padding(.horizontal, 10)
-         .background(Color.gray)
+        .padding(.vertical, 8)
     }
+    
 }
 
 struct TaskView_Previews: PreviewProvider {
-    static var todo = TODO.sampleData[0]
+    
+    // Display two different components for view checking
+    static var task1 = Item(title: "First task", desc: "Not important", isCompleted: false)
+    static var task2 = Item(title: "Second task", desc: "Not important", isCompleted: true)
+    
     static var previews: some View {
-        TaskView(todo: todo)
+        Group {
+            TaskView(item: task1)
+            TaskView(item: task2)
+        }
+        .previewLayout(.sizeThatFits) // Display preview only for component but not full iPhone
     }
 }
